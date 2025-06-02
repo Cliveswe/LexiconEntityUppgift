@@ -9,18 +9,17 @@ namespace EmployeesApp.Terminal;
 internal class Program
 {
 
-
+    static readonly EmployeeService employeeService = new(
+        new EmployeeRepository(
+            new ApplicationContext(
+                new DbContextOptionsBuilder<ApplicationContext>()
+                    .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EmployeesDb;Trusted_Connection=True;")
+                    .Options
+            )
+        )
+    );
     static void Main(string[] args)
     {
-        var options = new DbContextOptionsBuilder<ApplicationContext>()
-            .UseSqlServer("DefaultConnection")
-        .Options;
-
-        var context = new ApplicationContext(options);
-        var repository = new EmployeeRepository(context);
-        var employeeService = new EmployeeService(repository);
-
-        // EmployeeService employeeService = new(new EmployeeRepository(new ApplicationContext(options)));
         ListAllEmployees(employeeService);
         ListEmployee(562, employeeService);
     }
