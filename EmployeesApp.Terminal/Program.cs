@@ -4,20 +4,26 @@ using EmployeesApp.Infrastructure.Persistance;
 using EmployeesApp.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Text.Json;
 
 namespace EmployeesApp.Terminal;
 internal class Program
 {
 
     static readonly EmployeeService employeeService = new(
-        new EmployeeRepository(
-            new ApplicationContext(
-                new DbContextOptionsBuilder<ApplicationContext>()
-                    .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EmployeesDb;Trusted_Connection=True;")
-                    .Options
-            )
-        )
-    );
+     new EmployeeRepository(
+         new ApplicationContext(
+             new DbContextOptionsBuilder<ApplicationContext>()
+                 .UseSqlServer(JsonDocument.Parse(File.ReadAllText(
+                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "appsettings.json")
+                 ))
+                 .RootElement.GetProperty("ConnectionStrings")
+                 .GetProperty("DefaultConnection")
+                 .GetString())
+                 .Options
+         )
+     )
+ );
     static void Main(string[] args)
     {
         ListAllEmployees(employeeService);
