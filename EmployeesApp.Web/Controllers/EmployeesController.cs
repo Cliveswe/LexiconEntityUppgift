@@ -9,10 +9,12 @@ namespace EmployeesApp.Web.Controllers
     public class EmployeesController(IEmployeeService service) : Controller
     {
         [HttpGet("")]
-        public IActionResult Index() {
+        public IActionResult Index()
+        {
             var model = service.GetAll();
 
-            var viewModel = new IndexVM() {
+            var viewModel = new IndexVM()
+            {
                 EmployeeVMs = [.. model
                 .Select(e => new IndexVM.EmployeeVM()
                 {
@@ -26,19 +28,23 @@ namespace EmployeesApp.Web.Controllers
         }
 
         [HttpGet("create")]
-        public IActionResult Create() {
+        public IActionResult Create()
+        {
             return View();
         }
 
         [HttpPost("create")]
         [ServiceFilter(typeof(MyLogServiceFilterAttribute))]
-        public IActionResult Create(CreateVM viewModel) {
-            if(!ModelState.IsValid)
+        public IActionResult Create(CreateVM viewModel)
+        {
+            if (!ModelState.IsValid)
                 return View();
 
-            Employee employee = new() {
+            Employee employee = new()
+            {
                 Name = viewModel.Name,
                 Email = viewModel.Email,
+                Salary = viewModel.Salary,
             };
 
             service.Add(employee);
@@ -47,10 +53,12 @@ namespace EmployeesApp.Web.Controllers
 
         [HttpGet("details/{id}")]
         [TypeFilter(typeof(MyLogTypeFilterAttribute))]
-        public IActionResult Details(int id) {
+        public IActionResult Details(int id)
+        {
             var model = service.GetById(id);
 
-            DetailsVM viewModel = new() {
+            DetailsVM viewModel = new()
+            {
                 Id = model!.Id,
                 Name = model.Name,
                 Salary = model.Salary,
