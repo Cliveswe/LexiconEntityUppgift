@@ -5,10 +5,10 @@ namespace EmployeesApp.Application.Employees.Services;
 
 public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
 {
-    public void Add(Employee employee)
-    {
+    public void Add(Employee employee) {
         employee.Name = ToInitalCapital(employee.Name);
         employee.Email = employee.Email.ToLower();
+        employee.Salary = employee.Salary is null ? 0 : employee.Salary.Value;
         employeeRepository.Add(employee);
     }
 
@@ -18,8 +18,7 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
 
     public Employee[] GetAll() => [.. employeeRepository.GetAll().OrderBy(e => e.Name)];
 
-    public Employee? GetById(int id)
-    {
+    public Employee? GetById(int id) {
         Employee? employee = employeeRepository.GetById(id);
 
         return employee is null ?
