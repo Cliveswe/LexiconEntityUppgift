@@ -3,7 +3,6 @@ using EmployeesApp.Domain.Entities;
 using EmployeesApp.Infrastructure.Persistance;
 using EmployeesApp.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Text.Json;
 
 namespace EmployeesApp.Terminal;
@@ -24,32 +23,28 @@ internal class Program
          )
      )
  );
-    static void Main(string[] args)
-    {
+    static void Main(string[] args) {
         ListAllEmployees(employeeService);
         ListEmployee(562, employeeService);
     }
 
-    private static void ListAllEmployees(EmployeeService employeeService)
-    {
-        foreach (var item in employeeService.GetAll())
-            Console.WriteLine(item.Name);
+    private static void ListAllEmployees(EmployeeService employeeService) {
+        foreach(var item in employeeService.GetAll()) {
+            Console.Write(item.Name);
+            Console.WriteLine($" {item.Salary}");
+        }
 
         Console.WriteLine("------------------------------");
     }
 
-    private static void ListEmployee(int employeeID, EmployeeService employeeService)
-    {
+    private static void ListEmployee(int employeeID, EmployeeService employeeService) {
         Employee? employee;
 
-        try
-        {
+        try {
             employee = employeeService.GetById(employeeID);
             Console.WriteLine($"{employee?.Name}: {employee?.Email}");
             Console.WriteLine("------------------------------");
-        }
-        catch (ArgumentException e)
-        {
+        } catch(ArgumentException e) {
             Console.WriteLine($"EXCEPTION: {e.Message}");
         }
     }
